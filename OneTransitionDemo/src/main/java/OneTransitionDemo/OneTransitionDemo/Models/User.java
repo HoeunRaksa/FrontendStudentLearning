@@ -1,0 +1,176 @@
+package OneTransitionDemo.OneTransitionDemo.Models;
+
+
+import OneTransitionDemo.OneTransitionDemo.ENUMS.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+
+@Entity
+@Table(name = "TBL_USERS")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class User implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String username;
+    private LocalDate dob;
+    private String email;
+    private String password;
+    private String gender;
+    private String address;
+    @Enumerated(EnumType.STRING)
+    private Role role; // STUDENT, TEACHER, ADMIN
+
+    private String firstname;
+    private String lastname;
+    private String phone;
+    private String profilePicture;
+    private boolean isDeleted;
+
+    @Column(name = "last_route")
+    private String lastRoute;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<UserSessionLog> sessionLogs;
+
+    @OneToMany(mappedBy = "student", fetch = FetchType.EAGER)
+    private List<ExamResult> examResults;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private List<Notification> notifications;
+
+    public List<ExamResult> getExamResults() { return examResults; }
+    public void setExamResults(List<ExamResult> examResults) { this.examResults = examResults; }
+
+    public List<Notification> getNotifications() { return notifications; }
+    public void setNotifications(List<Notification> notifications) { this.notifications = notifications; }
+
+    public LocalDate getDob() { return dob; }
+    public void setDob(LocalDate dob) { this.dob = dob; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getEmail(){ return this.email; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
+
+    public void setEmail(String email){
+        this.email = email;
+    }
+
+    public void setFirstname(String firstname){
+        this.firstname = firstname;
+    }
+
+    public void setLastname(String lastname){
+        this.lastname = lastname;
+    }
+
+    public void setPhone(String phone){
+        this.phone = phone;
+    }
+
+    public void setProfilePicture(String profilePicture){
+        this.profilePicture = profilePicture;
+    }
+
+    public String getFirstname(){ return this.firstname; }
+    public String getLastname(){ return this.lastname; }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setGender(String gender){
+        this.gender = gender;
+    }
+
+    public String getGender(){
+        return this.gender;
+    }
+
+    public List<UserSessionLog> getSessionLogs() {
+        return sessionLogs;
+    }
+
+    public void setSessionLogs(List<UserSessionLog> userSessionLogs){
+        this.sessionLogs = userSessionLogs;
+    }
+
+    public String getLastRoute() {
+        return lastRoute;
+    }
+
+    public void setLastRoute(String lastRoute) {
+        this.lastRoute = lastRoute;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    @Override
+    @JsonIgnore
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // If you have roles, return them here. For now, return empty list.
+        return Collections.emptyList();
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+}
+
+
